@@ -35,6 +35,9 @@ RUN composer install --no-dev --optimize-autoloader
 # Install Node.js dependencies and build assets
 RUN npm install && npm run build
 
+# Create .env file for production if it doesn't exist
+RUN cp .env.example .env || echo "APP_KEY=base64:$(php -r 'echo base64_encode(random_bytes(32));')" > .env
+
 # Generate application key if not set
 RUN php artisan key:generate --no-interaction
 
