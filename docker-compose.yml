@@ -7,29 +7,22 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:80"
-    environment:
-      - APP_ENV=production
-      - APP_DEBUG=false
-      - DB_CONNECTION=pgsql
-      - DB_HOST=dpg-d3t2br7gi27c73e2adj0-a.oregon-postgres.render.com
-      - DB_PORT=5432
-      - DB_DATABASE=bankmanager
-      - DB_USERNAME=bankmanager_user
-      - DB_PASSWORD=rSHM1zdii3hlYfyarGwKvjuvv7EFXwVy
+    env_file:
+      - .env.local
     volumes:
-      - ./storage:/var/www/html/storage
+      - .:/var/www/html
+      - /var/www/html/vendor
     depends_on:
-      - db
+      - postgres
     networks:
       - bankmanager-network
 
-  # Optional: Local PostgreSQL for development
-  db:
+  postgres:
     image: postgres:16
     environment:
+      POSTGRES_DB: bankmanager
       POSTGRES_USER: myuser
       POSTGRES_PASSWORD: mypass
-      POSTGRES_DB: mydb
     ports:
       - "5432:5432"
     volumes:
@@ -45,7 +38,7 @@ services:
     ports:
       - "5050:80"
     depends_on:
-      - db
+      - postgres
     volumes:
       - pgadmin_data:/var/lib/pgadmin
     networks:

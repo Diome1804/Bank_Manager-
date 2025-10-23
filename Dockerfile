@@ -29,8 +29,8 @@ COPY . /var/www/html
 # Copy existing application directory permissions
 COPY --chown=www-data:www-data . /var/www/html
 
-# Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader
+# Install PHP dependencies (with dev dependencies for Collision)
+RUN composer install --optimize-autoloader
 
 # Install Node.js dependencies and build assets
 RUN npm install && npm run build

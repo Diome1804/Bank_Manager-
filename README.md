@@ -1,66 +1,210 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Bank Manager API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Application Laravel 10 pour la gestion bancaire avec API REST et documentation Swagger.
 
-## About Laravel
+## 🚀 Démarrage rapide
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Configuration initiale
+```bash
+# Cloner le repository
+git clone <votre-repo-url>
+cd bank-manager
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+# Setup complet (build + démarrage + migrations)
+make setup
+```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Accès aux services
+- **Application** : http://localhost:8080
+- **API Documentation** : http://localhost:8080/api/documentation
+- **pgAdmin** : http://localhost:5050 (admin@admin.com / admin)
 
-## Learning Laravel
+## 🛠️ Commandes de développement
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Docker Compose
+```bash
+# Démarrer tous les services
+make up
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+# Arrêter tous les services
+make down
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+# Voir les logs
+make logs
 
-## Laravel Sponsors
+# Accéder au shell du conteneur
+make shell
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Base de données
+```bash
+# Exécuter les migrations
+make migrate
 
-### Premium Partners
+# Reset complet de la DB
+make db-reset
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+# Se connecter à PostgreSQL
+make db-connect
+```
 
-## Contributing
+### Tests et documentation
+```bash
+# Générer la documentation Swagger
+make swagger
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+# Lancer les tests
+make test
 
-## Code of Conduct
+# Tests avec couverture
+make test-coverage
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 📁 Structure du projet
 
-## Security Vulnerabilities
+```
+bank-manager/
+├── app/                    # Code de l'application Laravel
+├── config/                 # Configuration Laravel
+├── database/               # Migrations et seeders
+├── docker-compose.yml      # Configuration Docker dev
+├── Dockerfile             # Image Docker production
+├── .env.local             # Variables dev (local)
+├── .env                   # Variables prod (Render)
+├── Makefile               # Commandes de développement
+└── README.md
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## 🔄 Workflow de développement
 
-## License
+### 1. Développement local
+```bash
+# Démarrer l'environnement
+make up
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# Coder vos fonctionnalités...
+# Tester sur http://localhost:8080
+
+# Générer la doc API
+make swagger
+```
+
+### 2. Tests et validation
+```bash
+# Tests unitaires/fonctionnels
+make test
+
+# Vérifier la documentation
+curl http://localhost:8080/api/documentation
+```
+
+### 3. Déploiement en production
+```bash
+# Commit des changements
+git add .
+git commit -m "Nouvelle fonctionnalité"
+
+# Push vers GitHub
+git push origin main
+
+# Render déploie automatiquement
+```
+
+## 🗄️ Base de données
+
+### Développement (local)
+- **Host** : postgres (service Docker)
+- **Port** : 5432
+- **Database** : bankmanager
+- **User** : myuser
+- **Password** : mypass
+
+### Production (Render)
+- **Host** : dpg-d3t2br7gi27c73e2adj0-a.oregon-postgres.render.com
+- **Port** : 5432
+- **Database** : bankmanager
+- **User** : bankmanager_user
+- **Password** : [configuré dans Render]
+
+## 📚 API Documentation
+
+La documentation Swagger est automatiquement générée et accessible sur `/api/documentation`.
+
+### Ajouter de la documentation
+```php
+/**
+ * @OA\Get(
+ *     path="/api/clients",
+ *     summary="Liste des clients",
+ *     @OA\Response(response=200, description="Succès")
+ * )
+ */
+public function index() {
+    // Votre code
+}
+```
+
+## 🚀 Déploiement
+
+### Render (recommandé)
+1. Créer un Web Service sur Render
+2. Connecter votre repo GitHub
+3. Sélectionner "Docker" comme runtime
+4. Configurer les variables d'environnement
+5. Déploiement automatique !
+
+### Variables d'environnement Render
+```
+APP_NAME=BankManager
+APP_ENV=production
+APP_DEBUG=false
+DB_CONNECTION=pgsql
+DB_HOST=<votre-host-postgres>
+DB_DATABASE=bankmanager
+DB_USERNAME=<votre-user>
+DB_PASSWORD=<votre-password>
+```
+
+## 🧪 Tests
+
+```bash
+# Tests unitaires
+make test
+
+# Tests avec couverture
+make test-coverage
+
+# Tests spécifiques
+docker-compose exec app php artisan test --filter=ClientTest
+```
+
+## 🛠️ Technologies utilisées
+
+- **Laravel 10** - Framework PHP
+- **PostgreSQL 16** - Base de données
+- **Docker** - Conteneurisation
+- **Swagger/OpenAPI** - Documentation API
+- **Tailwind CSS** - Interface utilisateur
+- **Render** - Hébergement cloud
+
+## 📝 Scripts disponibles
+
+Voir `Makefile` pour toutes les commandes disponibles :
+```bash
+make help
+```
+
+## 🤝 Contribution
+
+1. Créer une branche pour votre fonctionnalité
+2. Tester localement avec Docker
+3. Générer la documentation Swagger
+4. Commit et push
+5. Créer une Pull Request
+
+## 📞 Support
+
+En cas de problème :
+1. Vérifier les logs : `make logs`
+2. Tester la connectivité DB : `make db-connect`
+3. Vérifier la documentation : `make swagger`
