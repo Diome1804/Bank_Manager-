@@ -5,7 +5,18 @@ return [
     'documentations' => [
         'default' => [
             'api' => [
-                'title' => 'L5 Swagger UI',
+                'title' => 'Bank Manager API - Abdoulaye Diome',
+                'description' => 'Documentation de l\'API du projet Bank Manager développée par Abdoulaye Diome.',
+                'version' => '1.0.0',
+                'termsOfService' => '',
+                'contact' => [
+                    'name' => 'Abdoulaye Diome',
+                    'url' => 'https://github.com/Diome1804/Bank_Manager-.git',
+                ],
+                'license' => [
+                    'name' => 'MIT',
+                    'url' => 'https://opensource.org/licenses/MIT',
+                ],
             ],
 
             'routes' => [
@@ -21,8 +32,8 @@ return [
                 'use_absolute_path' => env('L5_SWAGGER_USE_ABSOLUTE_PATH', false),
 
                 /*
-                * Edit to set path where swagger ui assets should be stored
-                */
+                 * Edit to set path where swagger ui assets should be stored
+                 */
                 'swagger_ui_assets_path' => env('L5_SWAGGER_UI_ASSETS_PATH', 'vendor/swagger-api/swagger-ui/dist/'),
 
                 /*
@@ -45,6 +56,7 @@ return [
                  */
                 'annotations' => [
                     base_path('app'),
+                    base_path('app/Swagger'),
                 ],
             ],
         ],
@@ -108,16 +120,16 @@ return [
              * @link https://zircote.github.io/swagger-php/reference/processors.html
              */
             'default_processors_configuration' => [
-            /** Example */
-            /**
-             * 'operationId.hash' => true,
-             * 'pathFilter' => [
-             * 'tags' => [
-             * '/pets/',
-             * '/store/',
-             * ],
-             * ],.
-             */
+                /** Example */
+                /**
+                 * 'operationId.hash' => true,
+                 * 'pathFilter' => [
+                 * 'tags' => [
+                 * '/pets/',
+                 * '/store/',
+                 * ],
+                 * ],.
+                 */
             ],
 
             /**
@@ -167,7 +179,7 @@ return [
 
         /*
          * API security definitions. Will be generated into documentation file.
-        */
+         */
         'securityDefinitions' => [
             'securitySchemes' => [
                 /*
@@ -312,7 +324,7 @@ return [
          * Constants which can be used in annotations
          */
         'constants' => [
-            'L5_SWAGGER_CONST_HOST' => env('L5_SWAGGER_CONST_HOST', 'http://my-default-host.com'),
+            'L5_SWAGGER_CONST_HOST' => env('L5_SWAGGER_CONST_HOST', 'http://localhost:8080'),
         ],
     ],
 ];

@@ -1,13 +1,21 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "Bank Manager API",
-        "description": "API documentation for Bank Manager application",
+        "title": "Bank Manager API - Abdoulaye Diome",
+        "description": "Documentation de l'API du projet Bank Manager développée par Abdoulaye Diome.",
+        "contact": {
+            "name": "Abdoulaye Diome",
+            "url": "https://github.com/Diome1804/Bank_Manager-.git"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        },
         "version": "1.0.0"
     },
     "servers": [
         {
-            "url": "http://my-default-host.com",
+            "url": "http://localhost:8080",
             "description": "API server"
         }
     ],
