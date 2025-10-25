@@ -28,7 +28,7 @@ class UserFactory extends Factory
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
-            'type_user' => fake()->randomElement(['admin', 'client']),
+            'type_user' => fake()->randomElement([\App\Enums\TypeUser::ADMIN->value, \App\Enums\TypeUser::CLIENT->value]),
             'telephone' => fake()->phoneNumber(),
             'adresse' => fake()->address(),
             'date_naissance' => fake()->date(),

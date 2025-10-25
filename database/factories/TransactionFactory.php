@@ -17,7 +17,12 @@ class TransactionFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'type' => $this->faker->randomElement(['depot', 'retrait', 'virement', 'paiement']),
+            'montant' => $this->faker->randomFloat(2, 100, 50000), // Entre 100 et 50k FCFA
+            'description' => $this->faker->sentence(),
+            'date_transaction' => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'statut' => $this->faker->randomElement(['reussi', 'en_cours', 'echoue']),
+            'compte_id' => \App\Models\Compte::factory(),
         ];
     }
 }

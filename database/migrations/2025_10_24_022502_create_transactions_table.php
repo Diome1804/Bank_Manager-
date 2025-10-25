@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
+            $table->enum('type', ['depot', 'retrait', 'virement', 'paiement']);
+            $table->decimal('montant', 15, 2);
+            $table->text('description')->nullable();
+            $table->datetime('date_transaction');
+            $table->enum('statut', ['reussi', 'en_cours', 'echoue']);
+            $table->foreignId('compte_id')->constrained('comptes')->onDelete('cascade');
             $table->timestamps();
         });
     }
