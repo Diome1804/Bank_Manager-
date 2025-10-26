@@ -10,8 +10,17 @@ services:
       php artisan tinker --execute="try { DB::connection()->getPdo(); echo 'Database connection successful'; } catch (Exception \$e) { echo 'Database connection failed: ' . \$e->getMessage(); exit(1); }"
       # Check if tables exist before running migrations
       echo "Checking if database tables exist..."
-      TABLE_EXISTS=$(php artisan tinker --execute="echo DB::select('SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_schema = \'public\' AND table_name = \'comptes\')')[0]->exists ? 'yes' : 'no';")
-      if [ "$TABLE_EXISTS" = "no" ]; then
+      php artisan tinker --execute="
+        \$tables = DB::select('SELECT tablename FROM pg_tables WHERE schemaname = \'public\'');
+        \$tableNames = array_column(\$tables, 'tablename');
+        if (in_array('comptes', \$tableNames)) {
+          echo 'TABLES_EXIST';
+        } else {
+          echo 'TABLES_MISSING';
+        }
+      " > /tmp/table_check.txt 2>/dev/null || echo "TABLES_MISSING" > /tmp/table_check.txt
+      TABLE_STATUS=$(cat /tmp/table_check.txt)
+      if [ "$TABLE_STATUS" = "TABLES_MISSING" ]; then
         echo "Tables don't exist, running migrations..."
         php artisan migrate --force --verbose
       else
