@@ -26,7 +26,6 @@ Route::prefix('v1')->middleware(['rating'])->group(function () {
         ->name('comptes.show');
 
     Route::post('/comptes', [CompteController::class, 'store'])
-        ->middleware('logging')
         ->name('comptes.store');
 
     // Route pour mettre à jour les informations client d'un compte
