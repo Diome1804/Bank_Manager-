@@ -51,7 +51,9 @@ class CreateCompteRequest extends FormRequest
                 Rule::unique('clients', 'nci')->ignore($this->input('client.id'))
             ],
             'client.adresse' => ['required_if:client.id,null', 'string', 'min:5', 'max:500'],
-            'client.id' => ['nullable', 'uuid', 'exists:clients,id'],
+            'client.id' => ['nullable', 'uuid', Rule::exists('clients', 'id')->where(function ($query) {
+                return $query->whereNull('deleted_at');
+            })],
         ];
     }
 
@@ -99,13 +101,21 @@ class CreateCompteRequest extends FormRequest
     public function withValidator($validator): void
     {
         $validator->after(function ($validator) {
-            // Vérifications supplémentaires si nécessaire
             $clientData = $this->input('client', []);
 
-            // Si un ID client est fourni, vérifier qu'il existe
+            // Validation personnalisée pour le client
             if (!empty($clientData['id'])) {
-                // Les autres champs client ne sont pas requis si l'ID est fourni
-                // Cette logique est déjà gérée par required_if
+                // Si un ID client est fourni, vérifier qu'il existe et n'est pas supprimé
+                $clientExists = \App\Models\Client::where('id', $clientData['id'])
+                    ->whereNull('deleted_at')
+                    ->exists();
+
+                if (!$clientExists) {
+                    $validator->errors()->add('client.id', 'Le client spécifié n\'existe pas.');
+                }
+            } elseif (empty($clientData['id']) && !isset($clientData['nom'])) {
+                // Si ni ID ni nom fourni, c'est une erreur
+                $validator->errors()->add('client', 'Vous devez soit fournir un ID de client existant, soit les informations pour créer un nouveau client.');
             }
         });
     }
