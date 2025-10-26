@@ -66,10 +66,21 @@ class CompteQueryService
      */
     public function buildQuery(array $filters = [], ?string $sortField = null, string $sortOrder = 'desc'): Builder
     {
+        logger()->info('Building query with filters', [
+            'filters' => $filters,
+            'sortField' => $sortField,
+            'sortOrder' => $sortOrder,
+            'app_env' => app()->environment()
+        ]);
+
         $query = Compte::with('client');
+
+        logger()->info('Query before filters', ['query_sql' => $query->toSql()]);
 
         $query = $this->applyFilters($query, $filters);
         $query = $this->applySorting($query, $sortField, $sortOrder);
+
+        logger()->info('Query after filters and sorting', ['query_sql' => $query->toSql()]);
 
         return $query;
     }
