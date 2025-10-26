@@ -23,7 +23,15 @@ use Illuminate\Routing\Controller as BaseController;
  *     ),
  *     @OA\Server(
  *         url=L5_SWAGGER_CONST_HOST,
- *         description="API server"
+ *         description="Current Environment Server"
+ *     ),
+ *     @OA\Server(
+ *         url="http://localhost:8080",
+ *         description="Local Development Server"
+ *     ),
+ *     @OA\Server(
+ *         url="https://bank-manager-v6a9.onrender.com",
+ *         description="Production Server"
  *     )
  * )
  * @OA\PathItem(path="/")
