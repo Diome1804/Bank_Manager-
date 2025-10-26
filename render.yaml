@@ -8,6 +8,8 @@ services:
       php artisan config:cache
       php artisan route:cache
       php artisan view:cache
+      # Skip migrations as tables already exist in production
+      # php artisan migrate --force
       php artisan l5-swagger:generate
     startCommand: php artisan serve --host 0.0.0.0 --port 10000
     envVars:

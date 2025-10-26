@@ -108,13 +108,23 @@ class CompteController extends Controller
     public function index(ListComptesRequest $request): JsonResponse
     {
         try {
+            logger()->info('Début de la récupération des comptes', [
+                'request_params' => $request->all(),
+                'app_env' => app()->environment(),
+                'db_connection' => config('database.default')
+            ]);
+
             $filters = $request->only(['type', 'statut', 'search']);
             $sortField = $request->input('sort');
             $sortOrder = $request->input('order', 'desc');
             $perPage = min($request->input('limit', 10), 100);
 
+            logger()->info('Filtres appliqués', ['filters' => $filters]);
+
             $query = $this->queryService->buildQuery($filters, $sortField, $sortOrder);
             $comptes = $this->queryService->applyPagination($query, $perPage);
+
+            logger()->info('Comptes récupérés', ['count' => $comptes->count()]);
 
             return $this->paginatedResponse(
                 CompteResource::collection($comptes),
@@ -124,10 +134,11 @@ class CompteController extends Controller
         } catch (\Exception $e) {
             logger()->error('Erreur lors de la récupération des comptes', [
                 'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
                 'filters' => $request->only(['type', 'statut', 'search', 'sort', 'order'])
             ]);
 
-            return $this->errorResponse('Erreur lors de la récupération des comptes', 500);
+            return $this->errorResponse('Erreur lors de la récupération des comptes: ' . $e->getMessage(), 500);
         }
     }
 
