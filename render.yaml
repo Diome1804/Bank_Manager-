@@ -8,24 +8,18 @@ services:
       # Test database connection before migrations
       echo "Testing database connection..."
       php artisan tinker --execute="try { DB::connection()->getPdo(); echo 'Database connection successful'; } catch (Exception \$e) { echo 'Database connection failed: ' . \$e->getMessage(); exit(1); }"
-      # Check if tables exist before running migrations
-      echo "Checking if database tables exist..."
+      # Drop all tables and rerun migrations to ensure clean state
+      echo "Dropping all existing tables..."
       php artisan tinker --execute="
         \$tables = DB::select('SELECT tablename FROM pg_tables WHERE schemaname = \'public\'');
-        \$tableNames = array_column(\$tables, 'tablename');
-        if (in_array('comptes', \$tableNames)) {
-          echo 'TABLES_EXIST';
-        } else {
-          echo 'TABLES_MISSING';
+        foreach(\$tables as \$table) {
+          DB::statement('DROP TABLE IF EXISTS ' . \$table->tablename . ' CASCADE');
+          echo 'Dropped table: ' . \$table->tablename . PHP_EOL;
         }
-      " > /tmp/table_check.txt 2>/dev/null || echo "TABLES_MISSING" > /tmp/table_check.txt
-      TABLE_STATUS=$(cat /tmp/table_check.txt)
-      if [ "$TABLE_STATUS" = "TABLES_MISSING" ]; then
-        echo "Tables don't exist, running migrations..."
-        php artisan migrate --force --verbose
-      else
-        echo "Tables already exist, skipping migrations..."
-      fi
+      " 2>/dev/null || echo "No tables to drop or drop failed"
+      # Run migrations fresh
+      echo "Running fresh migrations..."
+      php artisan migrate:fresh --force --verbose
       # Verify tables in database
       echo "Verifying database tables..."
       php artisan tinker --execute="echo 'Tables in database:'; foreach(DB::select('SELECT tablename FROM pg_tables WHERE schemaname = \'public\'') as \$table) { echo \$table->tablename . PHP_EOL; }"
