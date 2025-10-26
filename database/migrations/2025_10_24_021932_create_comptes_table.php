@@ -12,13 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('comptes', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('numero_compte')->unique();
             $table->decimal('solde', 15, 2);
             $table->enum('type_compte', ['courant', 'epargne', 'entreprise']);
             $table->date('date_ouverture');
             $table->enum('statut', ['actif', 'bloque', 'ferme']);
-            $table->foreignId('client_id')->constrained('clients')->onDelete('cascade');
+            $table->uuid('client_id');
+            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
             $table->timestamps();
         });
     }

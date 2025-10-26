@@ -10,7 +10,11 @@ class Admin extends Model
 {
     use HasFactory;
 
+    protected $keyType = 'string';
+    public $incrementing = false;
+
     protected $fillable = [
+        'id',
         'nom',
         'prenom',
         'email',

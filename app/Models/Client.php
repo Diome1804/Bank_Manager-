@@ -11,14 +11,21 @@ class Client extends Model
 {
     use HasFactory;
 
+    protected $keyType = 'string';
+    public $incrementing = false;
+
     protected $fillable = [
+        'id',
         'nom',
         'prenom',
         'email',
         'telephone',
+        'nci',
         'date_naissance',
         'adresse',
         'type_user',
+        'password_temp',
+        'code_verification',
     ];
 
     protected $casts = [

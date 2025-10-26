@@ -17,11 +17,13 @@ class AdminFactory extends Factory
     public function definition(): array
     {
         return [
+            'id' => (string) \Illuminate\Support\Str::uuid(),
             'nom' => $this->faker->lastName,
             'prenom' => $this->faker->firstName,
             'email' => $this->faker->unique()->safeEmail,
             'telephone' => $this->faker->phoneNumber,
             'role' => $this->faker->randomElement(['manager', 'supervisor', 'analyst']),
+            'type_user' => 'admin',
         ];
     }
 }

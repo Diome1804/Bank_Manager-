@@ -12,13 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('transactions', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->enum('type', ['depot', 'retrait', 'virement', 'paiement']);
             $table->decimal('montant', 15, 2);
             $table->text('description')->nullable();
             $table->datetime('date_transaction');
             $table->enum('statut', ['reussi', 'en_cours', 'echoue']);
-            $table->foreignId('compte_id')->constrained('comptes')->onDelete('cascade');
+            $table->uuid('compte_id');
+            $table->foreign('compte_id')->references('id')->on('comptes')->onDelete('cascade');
             $table->timestamps();
         });
     }

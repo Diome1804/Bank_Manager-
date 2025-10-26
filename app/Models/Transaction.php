@@ -10,7 +10,11 @@ class Transaction extends Model
 {
     use HasFactory;
 
+    protected $keyType = 'string';
+    public $incrementing = false;
+
     protected $fillable = [
+        'id',
         'type',
         'montant',
         'description',
