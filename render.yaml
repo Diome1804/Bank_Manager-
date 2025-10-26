@@ -38,5 +38,7 @@ services:
         value: require
       - key: L5_SWAGGER_GENERATE_ALWAYS
         value: false
+      - key: DEBUGBAR_ENABLED
+        value: false
     healthCheckPath: /
     autoDeploy: true

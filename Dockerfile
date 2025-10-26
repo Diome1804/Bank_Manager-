@@ -63,16 +63,9 @@ RUN echo '<VirtualHost *:80>\n\
 # Expose port 80
 EXPOSE 80
 
-# Create startup script
-RUN echo '#!/bin/bash\n\
-# Run database migrations (skip if tables exist)\n\
-php artisan migrate --force || echo "Migrations skipped - tables may already exist"\n\
-# Generate Swagger documentation\n\
-php artisan l5-swagger:generate\n\
-# Start Apache\n\
-apache2-foreground' > /usr/local/bin/start.sh
-
-RUN chmod +x /usr/local/bin/start.sh
+# Copy entrypoint script
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Start the application
-CMD ["/usr/local/bin/start.sh"]
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
