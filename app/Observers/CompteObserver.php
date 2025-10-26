@@ -23,9 +23,19 @@ class CompteObserver
                 throw new \Exception('Client spécifié non trouvé');
             }
             $compte->client_id = $client->id;
-        } else {
-            // Créer un nouveau client
+        } elseif (!empty($clientData) && isset($clientData['nom'])) {
+            // Créer un nouveau client si les données sont fournies
             $client = $this->createClient($clientData);
+            $compte->client_id = $client->id;
+        } elseif ($compte->client_id) {
+            // Si client_id est déjà défini (par exemple via factory), utiliser ce client
+            $client = Client::find($compte->client_id);
+            if (!$client) {
+                throw new \Exception('Client spécifié non trouvé');
+            }
+        } else {
+            // Pour les seeders/factories, créer un client par défaut
+            $client = $this->createDefaultClient();
             $compte->client_id = $client->id;
         }
 
@@ -33,7 +43,7 @@ class CompteObserver
         $compte->numero_compte = $this->generateNumeroCompte();
 
         // Définir le solde initial (sera calculé plus tard avec les transactions)
-        $compte->solde = request()->input('soldeInitial', 0);
+        $compte->solde = request()->input('soldeInitial', $compte->solde ?? 0);
 
         // Définir le statut par défaut
         $compte->statut = 'actif';
@@ -73,12 +83,12 @@ class CompteObserver
 
         $client = new Client([
             'id' => (string) Str::uuid(),
-            'nom' => $clientData['nom'],
-            'prenom' => $clientData['prenom'],
-            'email' => $clientData['email'],
-            'telephone' => $clientData['telephone'],
-            'nci' => $clientData['nci'],
-            'adresse' => $clientData['adresse'],
+            'nom' => $clientData['nom'] ?? 'Nom' . rand(1000, 9999),
+            'prenom' => $clientData['prenom'] ?? 'Prenom' . rand(1000, 9999),
+            'email' => $clientData['email'] ?? 'email' . rand(1000, 9999) . '@example.com',
+            'telephone' => $clientData['telephone'] ?? '77' . rand(1000000, 9999999),
+            'nci' => $clientData['nci'] ?? rand(1000000000, 9999999999),
+            'adresse' => $clientData['adresse'] ?? 'Adresse ' . rand(1, 100),
             'password_temp' => bcrypt($password), // Stockage temporaire
             'code_verification' => $code,
             'type_user' => 'client',
@@ -96,6 +106,14 @@ class CompteObserver
         ]);
 
         return $client;
+    }
+
+    /**
+     * Créer un client par défaut pour les seeders
+     */
+    private function createDefaultClient(): Client
+    {
+        return $this->createClient([]);
     }
 
     /**
