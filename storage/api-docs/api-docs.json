@@ -16,7 +16,15 @@
     "servers": [
         {
             "url": "http://localhost:8080",
-            "description": "API server"
+            "description": "Current Environment Server"
+        },
+        {
+            "url": "http://localhost:8080",
+            "description": "Local Development Server"
+        },
+        {
+            "url": "https://bank-manager-v6a9.onrender.com",
+            "description": "Production Server"
         }
     ],
     "paths": {
