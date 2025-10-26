@@ -11,6 +11,9 @@ services:
       # Try migrations but don't fail if tables exist
       php artisan migrate --force || echo "Migrations skipped (tables may already exist)"
       php artisan l5-swagger:generate
+      # Fix storage permissions
+      chown -R www-data:www-data /var/www/html/storage
+      chmod -R 755 /var/www/html/storage
     startCommand: php artisan serve --host 0.0.0.0 --port 10000
     envVars:
       - key: APP_ENV
