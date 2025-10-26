@@ -325,7 +325,7 @@ return [
          * Constants which can be used in annotations
          */
         'constants' => [
-            'L5_SWAGGER_CONST_HOST' => env('L5_SWAGGER_CONST_HOST', 'http://localhost:8080'),
+            'L5_SWAGGER_CONST_HOST' => env('APP_URL', 'https://bank-manager-v6a9.onrender.com'),
         ],
     ],
 ];
