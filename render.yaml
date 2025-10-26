@@ -22,7 +22,7 @@ services:
       php artisan migrate:fresh --force --verbose
       # Run seeders
       echo "Running seeders..."
-      php artisan db:seed --force
+      php artisan db:seed --force --verbose
       # Verify tables in database
       echo "Verifying database tables..."
       php artisan tinker --execute="echo 'Tables in database:'; foreach(DB::select('SELECT tablename FROM pg_tables WHERE schemaname = \'public\'') as \$table) { echo \$table->tablename . PHP_EOL; }"
