@@ -12,9 +12,9 @@ touch /var/www/html/storage/logs/laravel.log
 chown www-data:www-data /var/www/html/storage/logs/laravel.log
 chmod 664 /var/www/html/storage/logs/laravel.log
 
-# Run database migrations (skip if tables exist)
+# Run database migrations fresh (drop all tables first)
 echo "Running database migrations..."
-php artisan migrate --force || echo "Migrations skipped - tables may already exist"
+php artisan migrate:fresh --force --verbose
 
 # Generate Swagger documentation
 echo "Generating Swagger documentation..."
