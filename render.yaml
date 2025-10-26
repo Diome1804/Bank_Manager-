@@ -11,6 +11,9 @@ services:
       # Run migrations with verbose output
       echo "Running database migrations..."
       php artisan migrate --force --verbose
+      # Verify tables were created
+      echo "Verifying database tables..."
+      php artisan tinker --execute="echo 'Tables in database:'; foreach(DB::select('SELECT tablename FROM pg_tables WHERE schemaname = \'public\'') as \$table) { echo \$table->tablename . PHP_EOL; }"
       # Generate Swagger docs
       php artisan l5-swagger:generate
       # Cache Laravel
