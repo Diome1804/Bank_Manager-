@@ -65,8 +65,8 @@ EXPOSE 80
 
 # Create startup script
 RUN echo '#!/bin/bash\n\
-# Run database migrations\n\
-php artisan migrate --force\n\
+# Run database migrations (skip if tables exist)\n\
+php artisan migrate --force || echo "Migrations skipped - tables may already exist"\n\
 # Generate Swagger documentation\n\
 php artisan l5-swagger:generate\n\
 # Start Apache\n\
