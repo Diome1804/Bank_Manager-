@@ -1,0 +1,35 @@
+services:
+  - type: web
+    name: bank-manager-app
+    runtime: php
+    buildCommand: |
+      composer install --no-dev --optimize-autoloader
+      npm ci && npm run build
+      php artisan config:cache
+      php artisan route:cache
+      php artisan view:cache
+      php artisan l5-swagger:generate
+    startCommand: php artisan serve --host 0.0.0.0 --port 10000
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: APP_URL
+        value: https://bank-manager-v6a9.onrender.com
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        value: dpg-d3t2br7gi27c73e2adj0-a
+      - key: DB_PORT
+        value: 5432
+      - key: DB_DATABASE
+        value: bankmanager
+      - key: DB_USERNAME
+        value: bankmanager_user
+      - key: DB_PASSWORD
+        value: rSHM1zdii3hlYfyarGwKvjuvv7EFXwVy
+      - key: L5_SWAGGER_GENERATE_ALWAYS
+        value: false
+    healthCheckPath: /
+    autoDeploy: true
