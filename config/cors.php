@@ -19,12 +19,7 @@ return [
 
 'allowed_methods' => ['*'],
 
-'allowed_origins' => [
-    'http://localhost:5173',
-    'http://localhost:8080',
-    'https://bank-manager-v6a9.onrender.com',
-    'https://editor.swagger.io'
-],
+'allowed_origins' => ['*'],
 
 
 'allowed_origins_patterns' => [],
