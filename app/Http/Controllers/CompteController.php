@@ -144,12 +144,12 @@ class CompteController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Erreur lors de la récupération des comptes',
-                'error' => app()->environment('local') ? $e->getMessage() : 'Erreur interne du serveur',
-                'debug_info' => app()->environment('local') ? [
+                'error' => $e->getMessage(), // Temporarily show full error for debugging
+                'debug_info' => [
                     'file' => $e->getFile(),
                     'line' => $e->getLine(),
                     'trace' => $e->getTraceAsString()
-                ] : null
+                ]
             ], 500);
         }
     }
