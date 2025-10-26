@@ -31,6 +31,8 @@ services:
         value: bankmanager_user
       - key: DB_PASSWORD
         value: rSHM1zdii3hlYfyarGwKvjuvv7EFXwVy
+      - key: DB_SSLMODE
+        value: require
       - key: L5_SWAGGER_GENERATE_ALWAYS
         value: false
     healthCheckPath: /
