@@ -135,10 +135,17 @@ class CompteController extends Controller
             logger()->error('Erreur lors de la récupération des comptes', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
                 'filters' => $request->only(['type', 'statut', 'search', 'sort', 'order'])
             ]);
 
-            return $this->errorResponse('Erreur lors de la récupération des comptes: ' . $e->getMessage(), 500);
+            // Return a simple error response for production
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur lors de la récupération des comptes',
+                'error' => app()->environment('local') ? $e->getMessage() : 'Erreur interne du serveur'
+            ], 500);
         }
     }
 
