@@ -20,6 +20,9 @@ services:
       # Run migrations fresh
       echo "Running fresh migrations..."
       php artisan migrate:fresh --force --verbose
+      # Run seeders
+      echo "Running seeders..."
+      php artisan db:seed --force
       # Verify tables in database
       echo "Verifying database tables..."
       php artisan tinker --execute="echo 'Tables in database:'; foreach(DB::select('SELECT tablename FROM pg_tables WHERE schemaname = \'public\'') as \$table) { echo \$table->tablename . PHP_EOL; }"
