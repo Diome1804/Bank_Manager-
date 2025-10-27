@@ -36,7 +36,26 @@ services:
       chown -R www-data:www-data /var/www/html/storage
       chmod -R 775 /var/www/html/storage
       chmod -R 775 /var/www/html/bootstrap/cache
-    startCommand: php artisan serve --host 0.0.0.0 --port 10000
+    startCommand: |
+      # Run admin seeder if no admin exists
+      php artisan tinker --execute="
+        if (\App\Models\Admin::count() == 0) {
+          echo 'Creating default admin...' . PHP_EOL;
+          \App\Models\Admin::create([
+            'id' => (string) \Illuminate\Support\Str::uuid(),
+            'nom' => 'Admin',
+            'prenom' => 'Super',
+            'email' => 'admin@test.com',
+            'password_temp' => bcrypt('admin123'),
+            'type_user' => 'admin'
+          ]);
+          echo 'Default admin created: admin@test.com / admin123' . PHP_EOL;
+        } else {
+          echo 'Admin already exists.' . PHP_EOL;
+        }
+      "
+      # Start the server
+      php artisan serve --host 0.0.0.0 --port 10000
     envVars:
       - key: APP_ENV
         value: production
