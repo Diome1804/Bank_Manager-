@@ -20,6 +20,10 @@ services:
       # Run migrations fresh
       echo "Running fresh migrations..."
       php artisan migrate:fresh --force --verbose
+      # Clear caches to ensure fresh database config
+      echo "Clearing caches..."
+      php artisan config:clear || echo "Config cache clear failed"
+      php artisan cache:clear || echo "Cache clear failed"
       # Run seeders
       echo "Running seeders..."
       php artisan db:seed --force --verbose
