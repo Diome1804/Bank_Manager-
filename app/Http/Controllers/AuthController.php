@@ -16,17 +16,18 @@ class AuthController extends Controller
     use ApiResponseTrait;
 
     /**
-     * Login pour clients et admins
+     * Connexion pour clients et admins
      *
      * @OA\Post(
      *     path="/api/v1/auth/login",
-     *     summary="Authentification utilisateur",
-     *     description="Authentifie un client ou admin et retourne les tokens",
+     *     summary="Connexion",
+     *     description="Authentifie un client ou un administrateur et retourne un token d'accès",
      *     operationId="login",
      *     tags={"Authentification"},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
+     *             required={"email","password"},
      *             @OA\Property(property="email", type="string", format="email", example="client1@test.com"),
      *             @OA\Property(property="password", type="string", example="password123")
      *         )
@@ -36,18 +37,24 @@ class AuthController extends Controller
      *         description="Authentification réussie",
      *         @OA\JsonContent(
      *             @OA\Property(property="success", type="boolean", example=true),
-     *             @OA\Property(property="message", type="string", example="Authentification réussie"),
      *             @OA\Property(property="data", type="object",
      *                 @OA\Property(property="user", type="object"),
      *                 @OA\Property(property="access_token", type="string"),
-     *                 @OA\Property(property="refresh_token", type="string"),
      *                 @OA\Property(property="token_type", type="string", example="Bearer"),
-     *                 @OA\Property(property="expires_in", type="integer", example=3600)
-     *             )
+     *                 @OA\Property(property="expires_in", type="integer", example=3600),
+     *                 @OA\Property(property="scope", type="string", example="client")
+     *             ),
+     *             @OA\Property(property="message", type="string", example="Authentification réussie")
      *         )
      *     ),
-     *     @OA\Response(response=401, description="Credentials invalides"),
-     *     @OA\Response(response=422, description="Données invalides")
+     *     @OA\Response(
+     *         response=422,
+     *         description="Informations d'identification incorrectes",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Les informations d'identification sont incorrectes."),
+     *             @OA\Property(property="errors", type="object")
+     *         )
+     *     )
      * )
      */
     public function login(Request $request): JsonResponse
@@ -78,13 +85,13 @@ class AuthController extends Controller
             ]);
         }
 
-        // Créer le token avec le scope approprié
-        $token = $user->createToken('API Token', [$scope]);
+        // Créer le token sans scope spécifique
+        $token = $user->createToken('API Token');
 
         // Stocker le refresh token dans un cookie sécurisé
         $cookie = cookie(
             'refresh_token',
-            $token->refreshToken->id,
+            $token->accessToken, // Utiliser accessToken au lieu de refreshToken->id
             60 * 24 * 7, // 7 jours
             '/',
             null,
@@ -97,7 +104,6 @@ class AuthController extends Controller
         return $this->successResponse([
             'user' => $user,
             'access_token' => $token->accessToken,
-            'refresh_token' => $token->refreshToken->id,
             'token_type' => 'Bearer',
             'expires_in' => 3600, // 1 heure
             'scope' => $scope,
