@@ -20,10 +20,16 @@ services:
       # Run migrations fresh
       echo "Running fresh migrations..."
       php artisan migrate:fresh --force --verbose
-      # Clear caches to ensure fresh database config
+      # Fix permissions and clear caches
+      echo "Setting proper permissions..."
+      chown -R www-data:www-data /var/www/html/storage
+      chmod -R 775 /var/www/html/storage
+      chmod -R 775 /var/www/html/bootstrap/cache
       echo "Clearing caches..."
       php artisan config:clear || echo "Config cache clear failed"
       php artisan cache:clear || echo "Cache clear failed"
+      php artisan route:clear || echo "Route cache clear failed"
+      php artisan view:clear || echo "View cache clear failed"
       # Run seeders
       echo "Running seeders..."
       php artisan db:seed --force --verbose
