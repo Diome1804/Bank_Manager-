@@ -29,6 +29,192 @@
     ],
     "paths": {
         "/": {},
+        "/api/v1/auth/login": {
+            "post": {
+                "tags": [
+                    "Authentification"
+                ],
+                "summary": "Connexion",
+                "description": "Authentifie un client ou un administrateur et retourne un token d'accès",
+                "operationId": "login",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "client1@test.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Authentification réussie",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "user": {
+                                                    "type": "object"
+                                                },
+                                                "access_token": {
+                                                    "type": "string"
+                                                },
+                                                "token_type": {
+                                                    "type": "string",
+                                                    "example": "Bearer"
+                                                },
+                                                "expires_in": {
+                                                    "type": "integer",
+                                                    "example": 3600
+                                                },
+                                                "scope": {
+                                                    "type": "string",
+                                                    "example": "client"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Authentification réussie"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Informations d'identification incorrectes",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Les informations d'identification sont incorrectes."
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/refresh": {
+            "post": {
+                "tags": [
+                    "Authentification"
+                ],
+                "summary": "Rafraîchir le token d'accès",
+                "description": "Utilise le refresh token pour obtenir un nouveau token d'accès",
+                "operationId": "refresh",
+                "responses": {
+                    "200": {
+                        "description": "Token rafraîchi avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "access_token": {
+                                                    "type": "string"
+                                                },
+                                                "token_type": {
+                                                    "type": "string",
+                                                    "example": "Bearer"
+                                                },
+                                                "expires_in": {
+                                                    "type": "integer",
+                                                    "example": 3600
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Refresh token invalide"
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/logout": {
+            "post": {
+                "tags": [
+                    "Authentification"
+                ],
+                "summary": "Déconnexion",
+                "description": "Révoque tous les tokens de l'utilisateur",
+                "operationId": "logout",
+                "responses": {
+                    "200": {
+                        "description": "Déconnexion réussie",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Déconnexion réussie"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non authentifié"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/v1/comptes": {
             "get": {
                 "tags": [
@@ -159,7 +345,12 @@
                     "500": {
                         "description": "Erreur serveur"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "post": {
                 "tags": [
@@ -198,41 +389,35 @@
                                     },
                                     "client": {
                                         "properties": {
-                                            "id": {
-                                                "description": "ID du client existant",
-                                                "type": "string",
-                                                "format": "uuid",
-                                                "nullable": true
-                                            },
                                             "nom": {
-                                                "description": "Requis si nouveau client",
+                                                "description": "Nom du client",
                                                 "type": "string",
                                                 "maxLength": 255,
                                                 "minLength": 2
                                             },
                                             "prenom": {
-                                                "description": "Requis si nouveau client",
+                                                "description": "Prénom du client",
                                                 "type": "string",
                                                 "maxLength": 255,
                                                 "minLength": 2
                                             },
                                             "email": {
-                                                "description": "Requis si nouveau client",
+                                                "description": "Email du client",
                                                 "type": "string",
                                                 "format": "email"
                                             },
                                             "telephone": {
-                                                "description": "Requis si nouveau client",
+                                                "description": "Téléphone du client",
                                                 "type": "string"
                                             },
                                             "nci": {
-                                                "description": "Requis si nouveau client",
+                                                "description": "Numéro NCI du client",
                                                 "type": "string",
                                                 "maxLength": 13,
                                                 "minLength": 13
                                             },
                                             "adresse": {
-                                                "description": "Requis si nouveau client",
+                                                "description": "Adresse du client",
                                                 "type": "string",
                                                 "maxLength": 500,
                                                 "minLength": 5
@@ -768,10 +953,29 @@
             }
         }
     },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "apiKey",
+                "description": "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                "name": "Authorization",
+                "in": "header"
+            }
+        }
+    },
     "tags": [
+        {
+            "name": "Authentification",
+            "description": "Authentification"
+        },
         {
             "name": "Comptes",
             "description": "Comptes"
+        }
+    ],
+    "security": [
+        {
+            "bearerAuth": []
         }
     ]
 }

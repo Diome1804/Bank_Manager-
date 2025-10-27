@@ -32,6 +32,15 @@ use Illuminate\Routing\Controller as BaseController;
  *     @OA\Server(
  *         url="https://bank-manager-v6a9.onrender.com",
  *         description="Production Server"
+ *     ),
+ *     @OA\Components(
+ *         @OA\SecurityScheme(
+ *             securityScheme="bearerAuth",
+ *             type="http",
+ *             scheme="bearer",
+ *             bearerFormat="JWT",
+ *             description="JWT Authorization header using the Bearer scheme. Example: 'Authorization: Bearer {token}'"
+ *         )
  *     )
  * )
  * @OA\PathItem(path="/")

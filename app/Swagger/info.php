@@ -24,4 +24,12 @@
  *     url="https://bank-manager-v6a9.onrender.com/api",
  *     description="Serveur de production"
  * )
+ *
+ * @OA\SecurityScheme(
+ *     securityScheme="bearerAuth",
+ *     type="http",
+ *     scheme="bearer",
+ *     bearerFormat="JWT",
+ *     description="JWT Authorization header using the Bearer scheme. Example: 'Authorization: Bearer {token}'"
+ * )
  */

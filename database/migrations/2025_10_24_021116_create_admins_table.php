@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('prenom');
             $table->string('email')->unique();
             $table->string('telephone');
+            $table->string('password_temp');
             $table->string('role');
             $table->enum('type_user', ['admin'])->default('admin');
             $table->timestamps();

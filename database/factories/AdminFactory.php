@@ -22,6 +22,7 @@ class AdminFactory extends Factory
             'prenom' => $this->faker->firstName,
             'email' => $this->faker->unique()->safeEmail,
             'telephone' => $this->faker->phoneNumber,
+            'password_temp' => bcrypt('password123'),
             'role' => $this->faker->randomElement(['manager', 'supervisor', 'analyst']),
             'type_user' => 'admin',
         ];

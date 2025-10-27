@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CompteController;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,17 +16,33 @@ use App\Http\Controllers\CompteController;
 |
 */
 
-// Routes API v1
-Route::prefix('v1')->middleware(['rating'])->group(function () {
+// Routes d'authentification (sans middleware d'authentification)
+Route::prefix('v1/auth')->group(function () {
+    Route::post('/login', [AuthController::class, 'login'])
+        ->name('auth.login');
 
-    // Routes pour les comptes
+    Route::post('/refresh', [AuthController::class, 'refresh'])
+        ->name('auth.refresh');
+
+    Route::post('/logout', [AuthController::class, 'logout'])
+        ->middleware('auth:api')
+        ->name('auth.logout');
+});
+
+// Routes API v1 avec authentification
+Route::prefix('v1')->middleware(['auth:api'])->group(function () {
+
+    // Routes pour les comptes (sans scope spécifique pour le moment)
     Route::get('/comptes', [CompteController::class, 'index'])
+        ->middleware('logging')
         ->name('comptes.index');
 
     Route::get('/comptes/{compte}', [CompteController::class, 'show'])
+        ->middleware('logging')
         ->name('comptes.show');
 
     Route::post('/comptes', [CompteController::class, 'store'])
+        ->middleware('logging')
         ->name('comptes.store');
 
     // Route pour mettre à jour les informations client d'un compte
@@ -37,6 +54,11 @@ Route::prefix('v1')->middleware(['rating'])->group(function () {
     Route::delete('/comptes/{compte}', [CompteController::class, 'destroy'])
         ->middleware('logging')
         ->name('comptes.destroy');
+
+    // Routes admin (scope: admin) - à développer plus tard
+    // Route::middleware('scope:admin')->prefix('admin')->group(function () {
+    //     // Routes d'administration
+    // });
 
 });
 
@@ -54,7 +76,13 @@ Route::get('/docs/api-docs.json', function () {
     ]);
 })->name('swagger.json');
 
+// Route alternative pour Swagger UI
+Route::get('/api/docs', function () {
+    return redirect('/docs');
+});
+
 // Route existante pour l'authentification (temporairement conservée)
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+

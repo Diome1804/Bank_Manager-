@@ -36,19 +36,7 @@ services:
       chown -R www-data:www-data /var/www/html/storage
       chmod -R 775 /var/www/html/storage
       chmod -R 775 /var/www/html/bootstrap/cache
-    startCommand: |
-      # Run seeders if database is empty
-      php artisan tinker --execute="
-        if (\App\Models\Compte::count() == 0) {
-          echo 'Running seeders...' . PHP_EOL;
-          Artisan::call('db:seed', ['--force' => true, '--verbose' => true]);
-          echo 'Seeders completed.' . PHP_EOL;
-        } else {
-          echo 'Database already seeded.' . PHP_EOL;
-        }
-      "
-      # Start the server
-      php artisan serve --host 0.0.0.0 --port 10000
+    startCommand: php artisan serve --host 0.0.0.0 --port 10000
     envVars:
       - key: APP_ENV
         value: production

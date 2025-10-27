@@ -41,6 +41,7 @@ class CompteController extends Controller
      *     description="Récupère la liste de tous les comptes non supprimés avec possibilité de filtrage et pagination",
      *     operationId="getComptes",
      *     tags={"Comptes"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="page",
      *         in="query",
@@ -170,13 +171,12 @@ class CompteController extends Controller
      *             @OA\Property(property="soldeInitial", type="number", minimum=10000, example=500000),
      *             @OA\Property(property="devise", type="string", enum={"FCFA", "XOF"}, example="FCFA"),
      *             @OA\Property(property="client", type="object",
-     *                 @OA\Property(property="id", type="string", format="uuid", nullable=true, description="ID du client existant"),
-     *                 @OA\Property(property="nom", type="string", minLength=2, maxLength=255, description="Requis si nouveau client"),
-     *                 @OA\Property(property="prenom", type="string", minLength=2, maxLength=255, description="Requis si nouveau client"),
-     *                 @OA\Property(property="email", type="string", format="email", description="Requis si nouveau client"),
-     *                 @OA\Property(property="telephone", type="string", description="Requis si nouveau client"),
-     *                 @OA\Property(property="nci", type="string", minLength=13, maxLength=13, description="Requis si nouveau client"),
-     *                 @OA\Property(property="adresse", type="string", minLength=5, maxLength=500, description="Requis si nouveau client")
+     *                 @OA\Property(property="nom", type="string", minLength=2, maxLength=255, description="Nom du client"),
+     *                 @OA\Property(property="prenom", type="string", minLength=2, maxLength=255, description="Prénom du client"),
+     *                 @OA\Property(property="email", type="string", format="email", description="Email du client"),
+     *                 @OA\Property(property="telephone", type="string", description="Téléphone du client"),
+     *                 @OA\Property(property="nci", type="string", minLength=13, maxLength=13, description="Numéro NCI du client"),
+     *                 @OA\Property(property="adresse", type="string", minLength=5, maxLength=500, description="Adresse du client")
      *             )
      *         )
      *     ),
