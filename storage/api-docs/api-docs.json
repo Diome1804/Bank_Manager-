@@ -345,12 +345,7 @@
                     "500": {
                         "description": "Erreur serveur"
                     }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
+                }
             },
             "post": {
                 "tags": [

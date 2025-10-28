@@ -41,7 +41,6 @@ class CompteController extends Controller
      *     description="Récupère la liste de tous les comptes non supprimés avec possibilité de filtrage et pagination",
      *     operationId="getComptes",
      *     tags={"Comptes"},
-     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="page",
      *         in="query",
