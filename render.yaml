@@ -42,6 +42,18 @@ services:
       echo "Generating Swagger documentation..."
       php artisan l5-swagger:generate
 
+      # Force clear all caches one more time after generation
+      echo "Final cache cleanup..."
+      php artisan config:clear
+      php artisan cache:clear
+      php artisan route:clear
+      php artisan view:clear
+      rm -rf bootstrap/cache/*.php
+      rm -rf storage/framework/cache/data/*
+      rm -rf storage/framework/views/*
+      rm -rf storage/framework/sessions/*
+      rm -rf storage/logs/*
+
       # Final permissions
       chown -R www-data:www-data /var/www/html/storage
       chmod -R 775 /var/www/html/storage
