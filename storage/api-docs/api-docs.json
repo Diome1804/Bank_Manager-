@@ -15,7 +15,7 @@
     },
     "servers": [
         {
-            "url": "https://bank-manager-v6a9.onrender.com",
+            "url": "http://localhost:8080",
             "description": "Current Environment Server"
         },
         {
