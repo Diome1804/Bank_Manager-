@@ -15,7 +15,7 @@
     },
     "servers": [
         {
-            "url": "https://bank-manager-v6a9.onrender.com",
+            "url": "http://localhost:8080",
             "description": "Current Environment Server"
         },
         {
@@ -29,192 +29,6 @@
     ],
     "paths": {
         "/": {},
-        "/api/v1/auth/login": {
-            "post": {
-                "tags": [
-                    "Authentification"
-                ],
-                "summary": "Connexion",
-                "description": "Authentifie un client ou un administrateur et retourne un token d'accès",
-                "operationId": "login",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "email",
-                                    "password"
-                                ],
-                                "properties": {
-                                    "email": {
-                                        "type": "string",
-                                        "format": "email",
-                                        "example": "client1@test.com"
-                                    },
-                                    "password": {
-                                        "type": "string",
-                                        "example": "password123"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Authentification réussie",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "data": {
-                                            "properties": {
-                                                "user": {
-                                                    "type": "object"
-                                                },
-                                                "access_token": {
-                                                    "type": "string"
-                                                },
-                                                "token_type": {
-                                                    "type": "string",
-                                                    "example": "Bearer"
-                                                },
-                                                "expires_in": {
-                                                    "type": "integer",
-                                                    "example": 3600
-                                                },
-                                                "scope": {
-                                                    "type": "string",
-                                                    "example": "client"
-                                                }
-                                            },
-                                            "type": "object"
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Authentification réussie"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Informations d'identification incorrectes",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Les informations d'identification sont incorrectes."
-                                        },
-                                        "errors": {
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/auth/refresh": {
-            "post": {
-                "tags": [
-                    "Authentification"
-                ],
-                "summary": "Rafraîchir le token d'accès",
-                "description": "Utilise le refresh token pour obtenir un nouveau token d'accès",
-                "operationId": "refresh",
-                "responses": {
-                    "200": {
-                        "description": "Token rafraîchi avec succès",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "data": {
-                                            "properties": {
-                                                "access_token": {
-                                                    "type": "string"
-                                                },
-                                                "token_type": {
-                                                    "type": "string",
-                                                    "example": "Bearer"
-                                                },
-                                                "expires_in": {
-                                                    "type": "integer",
-                                                    "example": 3600
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Refresh token invalide"
-                    }
-                }
-            }
-        },
-        "/api/v1/auth/logout": {
-            "post": {
-                "tags": [
-                    "Authentification"
-                ],
-                "summary": "Déconnexion",
-                "description": "Révoque tous les tokens de l'utilisateur",
-                "operationId": "logout",
-                "responses": {
-                    "200": {
-                        "description": "Déconnexion réussie",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Déconnexion réussie"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Non authentifié"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
         "/api/v1/comptes": {
             "get": {
                 "tags": [
@@ -946,74 +760,6 @@
                     }
                 }
             }
-        },
-        "/api/v1/setup-admin": {
-            "post": {
-                "tags": [
-                    "Administration"
-                ],
-                "summary": "Créer un admin de test (temporaire)",
-                "description": "Crée un administrateur par défaut pour les tests. Cette route sera supprimée en production.",
-                "operationId": "setupAdmin",
-                "responses": {
-                    "201": {
-                        "description": "Admin créé avec succès",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Admin créé avec succès"
-                                        },
-                                        "data": {
-                                            "properties": {
-                                                "email": {
-                                                    "type": "string",
-                                                    "example": "admin@test.com"
-                                                },
-                                                "password": {
-                                                    "type": "string",
-                                                    "example": "admin123"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Un admin existe déjà",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Un admin existe déjà"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Erreur serveur"
-                    }
-                }
-            }
         }
     },
     "components": {
@@ -1028,16 +774,8 @@
     },
     "tags": [
         {
-            "name": "Authentification",
-            "description": "Authentification"
-        },
-        {
             "name": "Comptes",
             "description": "Comptes"
-        },
-        {
-            "name": "Administration",
-            "description": "Administration"
         }
     ],
     "security": [
