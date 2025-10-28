@@ -81,6 +81,45 @@ Route::get('/api/docs', function () {
     return redirect('/docs');
 });
 
+// Route pour créer un admin de test (temporaire)
+Route::post('/setup-admin', function (Request $request) {
+    try {
+        // Vérifier si un admin existe déjà
+        if (\App\Models\Admin::count() > 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Un admin existe déjà'
+            ], 400);
+        }
+
+        // Créer l'admin
+        $admin = \App\Models\Admin::create([
+            'id' => (string) \Illuminate\Support\Str::uuid(),
+            'nom' => 'Admin',
+            'prenom' => 'Super',
+            'email' => 'admin@test.com',
+            'password_temp' => bcrypt('admin123'),
+            'type_user' => 'admin'
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Admin créé avec succès',
+            'data' => [
+                'email' => $admin->email,
+                'password' => 'admin123'
+            ]
+        ]);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Erreur lors de la création de l\'admin',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+});
+
 // Route existante pour l'authentification (temporairement conservée)
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
