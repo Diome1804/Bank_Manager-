@@ -65,6 +65,7 @@
                 "responses": {
                     "200": {
                         "description": "Authentification réussie",
+                        
                         "content": {
                             "application/json": {
                                 "schema": {
