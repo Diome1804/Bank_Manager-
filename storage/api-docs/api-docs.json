@@ -951,6 +951,74 @@
                     }
                 }
             }
+        },
+        "/api/v1/setup-admin": {
+            "post": {
+                "tags": [
+                    "Administration"
+                ],
+                "summary": "Créer un admin de test (temporaire)",
+                "description": "Crée un administrateur par défaut pour les tests. Cette route sera supprimée en production.",
+                "operationId": "setupAdmin",
+                "responses": {
+                    "201": {
+                        "description": "Admin créé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Admin créé avec succès"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "admin@test.com"
+                                                },
+                                                "password": {
+                                                    "type": "string",
+                                                    "example": "admin123"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Un admin existe déjà",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Un admin existe déjà"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur serveur"
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -971,6 +1039,10 @@
         {
             "name": "Comptes",
             "description": "Comptes"
+        },
+        {
+            "name": "Administration",
+            "description": "Administration"
         }
     ],
     "security": [

@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CompteController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\SetupController;
 
 /*
 |--------------------------------------------------------------------------
@@ -82,73 +83,8 @@ Route::get('/api/docs', function () {
 });
 
 // Route pour créer un admin de test (temporaire)
-/**
- * @OA\Post(
- *     path="/api/v1/setup-admin",
- *     summary="Créer un admin de test (temporaire)",
- *     description="Crée un administrateur par défaut pour les tests. Cette route sera supprimée en production.",
- *     operationId="setupAdmin",
- *     tags={"Administration"},
- *     @OA\Response(
- *         response=201,
- *         description="Admin créé avec succès",
- *         @OA\JsonContent(
- *             @OA\Property(property="success", type="boolean", example=true),
- *             @OA\Property(property="message", type="string", example="Admin créé avec succès"),
- *             @OA\Property(property="data", type="object",
- *                 @OA\Property(property="email", type="string", example="admin@test.com"),
- *                 @OA\Property(property="password", type="string", example="admin123")
- *             )
- *         )
- *     ),
- *     @OA\Response(
- *         response=400,
- *         description="Un admin existe déjà",
- *         @OA\JsonContent(
- *             @OA\Property(property="success", type="boolean", example=false),
- *             @OA\Property(property="message", type="string", example="Un admin existe déjà")
- *         )
- *     ),
- *     @OA\Response(response=500, description="Erreur serveur")
- * )
- */
-Route::post('/setup-admin', function (Request $request) {
-    try {
-        // Vérifier si un admin existe déjà
-        if (\App\Models\Admin::count() > 0) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Un admin existe déjà'
-            ], 400);
-        }
-
-        // Créer l'admin
-        $admin = \App\Models\Admin::create([
-            'id' => (string) \Illuminate\Support\Str::uuid(),
-            'nom' => 'Admin',
-            'prenom' => 'Super',
-            'email' => 'admin@test.com',
-            'password_temp' => bcrypt('admin123'),
-            'type_user' => 'admin'
-        ]);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Admin créé avec succès',
-            'data' => [
-                'email' => $admin->email,
-                'password' => 'admin123'
-            ]
-        ]);
-
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Erreur lors de la création de l\'admin',
-            'error' => $e->getMessage()
-        ], 500);
-    }
-});
+Route::post('/setup-admin', [SetupController::class, 'setupAdmin'])
+    ->name('setup.admin');
 
 // Route existante pour l'authentification (temporairement conservée)
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
