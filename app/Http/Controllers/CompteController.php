@@ -108,47 +108,66 @@ class CompteController extends Controller
     public function index(ListComptesRequest $request): JsonResponse
     {
         try {
-            logger()->info('Début de la récupération des comptes', [
-                'request_params' => $request->all(),
-                'app_env' => app()->environment(),
-                'db_connection' => config('database.default')
-            ]);
+            logger('=== COMPTE INDEX START ===');
+            logger('Request data', $request->all());
+            logger('App environment', ['env' => app()->environment()]);
+            logger('Database config', ['connection' => config('database.default')]);
+
+            // Test DB connection
+            try {
+                $dbTest = DB::select('SELECT 1 as test');
+                logger('DB connection OK', ['test_result' => $dbTest]);
+            } catch (\Exception $dbError) {
+                logger('DB connection FAILED', [
+                    'error' => $dbError->getMessage(),
+                    'file' => $dbError->getFile(),
+                    'line' => $dbError->getLine()
+                ]);
+                throw $dbError;
+            }
 
             $filters = $request->only(['type', 'statut', 'search']);
             $sortField = $request->input('sort');
             $sortOrder = $request->input('order', 'desc');
             $perPage = min($request->input('limit', 10), 100);
 
-            logger()->info('Filtres appliqués', ['filters' => $filters]);
+            logger('Filters applied', ['filters' => $filters]);
 
             $query = $this->queryService->buildQuery($filters, $sortField, $sortOrder);
+            logger('Query built successfully');
+
             $comptes = $this->queryService->applyPagination($query, $perPage);
+            logger('Pagination applied', ['count' => $comptes->count()]);
 
-            logger()->info('Comptes récupérés', ['count' => $comptes->count()]);
-
-            return $this->paginatedResponse(
+            $response = $this->paginatedResponse(
                 CompteResource::collection($comptes),
                 'Liste des comptes récupérée avec succès'
             );
 
+            logger('Response created successfully');
+            return $response;
+
         } catch (\Exception $e) {
-            logger()->error('Erreur lors de la récupération des comptes', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
+            logger('=== COMPTE INDEX ERROR ===', [
+                'message' => $e->getMessage(),
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
-                'filters' => $request->only(['type', 'statut', 'search', 'sort', 'order'])
+                'code' => $e->getCode(),
+                'trace' => $e->getTraceAsString(),
+                'request_data' => $request->all(),
+                'server_data' => $_SERVER
             ]);
 
-            // Return a simple error response for production
+            // Return detailed error for debugging
             return response()->json([
                 'success' => false,
                 'message' => 'Erreur lors de la récupération des comptes',
-                'error' => $e->getMessage(), // Temporarily show full error for debugging
+                'error' => $e->getMessage(),
                 'debug_info' => [
                     'file' => $e->getFile(),
                     'line' => $e->getLine(),
-                    'trace' => $e->getTraceAsString()
+                    'code' => $e->getCode(),
+                    'class' => get_class($e)
                 ]
             ], 500);
         }
