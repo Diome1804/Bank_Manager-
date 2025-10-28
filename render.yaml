@@ -3,9 +3,10 @@ services:
     name: bank-manager-app
     runtime: php
     buildCommand: |
-      # Complete system cleanup before starting
-      echo "=== COMPLETE SYSTEM CLEANUP ==="
-      rm -rf bootstrap/cache/* storage/framework/cache/* storage/framework/views/* storage/framework/sessions/* storage/logs/* storage/api-docs/* vendor/composer/* || echo "Cleanup completed"
+      # Fix permissions before any operations
+      echo "Setting proper permissions..."
+      sudo chmod -R 777 storage bootstrap/cache || echo "Permission fix failed"
+      chown -R www-data:www-data storage bootstrap/cache || echo "Ownership fix failed"
 
       composer install --no-dev --optimize-autoloader
       npm ci && npm run build
