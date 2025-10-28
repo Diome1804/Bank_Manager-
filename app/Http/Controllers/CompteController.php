@@ -13,6 +13,7 @@ use App\Services\CompteDeletionService;
 use App\Traits\ApiResponseTrait;
 use App\Exceptions\CompteException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 
 class CompteController extends Controller
 {
