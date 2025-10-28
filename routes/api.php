@@ -82,6 +82,36 @@ Route::get('/api/docs', function () {
 });
 
 // Route pour créer un admin de test (temporaire)
+/**
+ * @OA\Post(
+ *     path="/api/v1/setup-admin",
+ *     summary="Créer un admin de test (temporaire)",
+ *     description="Crée un administrateur par défaut pour les tests. Cette route sera supprimée en production.",
+ *     operationId="setupAdmin",
+ *     tags={"Administration"},
+ *     @OA\Response(
+ *         response=201,
+ *         description="Admin créé avec succès",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="success", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Admin créé avec succès"),
+ *             @OA\Property(property="data", type="object",
+ *                 @OA\Property(property="email", type="string", example="admin@test.com"),
+ *                 @OA\Property(property="password", type="string", example="admin123")
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Un admin existe déjà",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="success", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string", example="Un admin existe déjà")
+ *         )
+ *     ),
+ *     @OA\Response(response=500, description="Erreur serveur")
+ * )
+ */
 Route::post('/setup-admin', function (Request $request) {
     try {
         // Vérifier si un admin existe déjà
