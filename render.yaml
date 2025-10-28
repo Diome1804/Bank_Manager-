@@ -25,6 +25,20 @@ services:
       chown -R www-data:www-data /var/www/html/storage
       chmod -R 775 /var/www/html/storage
       chmod -R 775 /var/www/html/bootstrap/cache
+      echo "Clearing all caches and temporary files..."
+      # Force clear all Laravel caches
+      php artisan config:clear || echo "Config cache clear failed"
+      php artisan cache:clear || echo "Cache clear failed"
+      php artisan route:clear || echo "Route cache clear failed"
+      php artisan view:clear || echo "View cache clear failed"
+      # Remove cached files manually to ensure complete cleanup
+      rm -rf bootstrap/cache/*.php || echo "Bootstrap cache cleanup failed"
+      rm -rf storage/framework/cache/data/* || echo "Storage cache cleanup failed"
+      rm -rf storage/framework/views/* || echo "View cache cleanup failed"
+      rm -rf storage/framework/sessions/* || echo "Session cache cleanup failed"
+      rm -rf storage/logs/* || echo "Log cleanup failed"
+      # Clear Composer autoloader cache
+      composer dump-autoload --optimize || echo "Composer autoload dump failed"
       # Verify tables in database
       echo "Verifying database tables..."
       php artisan tinker --execute="echo 'Tables in database:'; foreach(DB::select('SELECT tablename FROM pg_tables WHERE schemaname = \'public\'') as \$table) { echo \$table->tablename . PHP_EOL; }"
