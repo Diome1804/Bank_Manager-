@@ -25,20 +25,11 @@ services:
       chown -R www-data:www-data /var/www/html/storage
       chmod -R 775 /var/www/html/storage
       chmod -R 775 /var/www/html/bootstrap/cache
-      echo "Clearing caches..."
-      php artisan config:clear || echo "Config cache clear failed"
-      php artisan cache:clear || echo "Cache clear failed"
-      php artisan route:clear || echo "Route cache clear failed"
-      php artisan view:clear || echo "View cache clear failed"
       # Verify tables in database
       echo "Verifying database tables..."
       php artisan tinker --execute="echo 'Tables in database:'; foreach(DB::select('SELECT tablename FROM pg_tables WHERE schemaname = \'public\'') as \$table) { echo \$table->tablename . PHP_EOL; }"
       # Generate Swagger docs
       php artisan l5-swagger:generate
-      # Cache Laravel
-      php artisan config:cache
-      php artisan route:cache
-      php artisan view:cache
       # Fix storage permissions
       chown -R www-data:www-data /var/www/html/storage
       chmod -R 775 /var/www/html/storage
