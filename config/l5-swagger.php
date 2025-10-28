@@ -320,7 +320,7 @@ return [
         'constants' => [
             'L5_SWAGGER_CONST_HOST' => env('APP_ENV') === 'local'
                 ? 'http://localhost:8080'
-                : 'https://bank-manager-v6a9.onrender.com',
+                : env('APP_URL', 'https://bank-manager-v6a9.onrender.com'),
         ],
     ],
 ];
